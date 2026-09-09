@@ -36,4 +36,19 @@ export class TriviaService {
     if (!card) throw new NotFoundException(`Card ${id} not found`);
     return this.triviaRepo.remove(card);
   }
+
+  /**
+   * Validates a submitted answer against the card's stored answer.
+   * Comparison is case-insensitive and ignores leading/trailing whitespace.
+   */
+  async checkAnswer(id: string, submitted: string): Promise<{ correct: boolean }> {
+    const card = await this.triviaRepo.findOneBy({ id });
+    if (!card) throw new NotFoundException(`Card ${id} not found`);
+
+    return { correct: TriviaService.answersMatch(card.answer, submitted) };
+  }
+
+  static answersMatch(expected: string, submitted: string): boolean {
+    return expected.trim().toLowerCase() === submitted.trim().toLowerCase();
+  }
 }
