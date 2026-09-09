@@ -2,6 +2,7 @@ import { Controller, Post, Get, Patch, Delete, Body, Param } from '@nestjs/commo
 import { TriviaService } from './trivia.service';
 import { CreateTriviaDto } from './dto/create-trivia.dto';
 import { UpdateTriviaDto } from './dto/update-trivia.dto';
+import { CheckAnswerDto } from './dto/check-answer.dto';
 
 @Controller('trivia')
 export class TriviaController {
@@ -30,5 +31,10 @@ export class TriviaController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.triviaService.remove(id);
+  }
+
+  @Post(':id/check')
+  checkAnswer(@Param('id') id: string, @Body() dto: CheckAnswerDto) {
+    return this.triviaService.checkAnswer(id, dto.answer);
   }
 }
